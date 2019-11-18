@@ -26,4 +26,4 @@ CPU Power Gadget can be built using Visual Studio. Until the Libre Hardware Moni
 
 Mozilla Public License Version 2.0
 
-See [Legal information](CPU Power Gadget/Resources/legal.txt)
+See [Legal information](<CPU Power Gadget/Resources/legal.txt>)
