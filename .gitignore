@@ -1,0 +1,18 @@
+# User-specific files
+*.user
+
+# Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+obj/
+
+# Cache/options directory
+.vs/
+
+# NuGet Packages
+*.nupkg
+**/packages/*
+!**/packages/build/
+*.nuget.props
+*.nuget.targets
