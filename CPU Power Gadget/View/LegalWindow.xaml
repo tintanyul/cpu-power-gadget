@@ -6,8 +6,8 @@
         mc:Ignorable="d"
         Title="Legal" SizeToContent="WidthAndHeight" ShowInTaskbar="False" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" Icon="/Resources/cpu.ico" Background="#F0F0F0">
     <Grid Margin="10" Width="510" Height="300">
-        <ScrollViewer Margin="1">
-            <TextBlock x:Name="LegalBox" FontFamily="Consolas" Margin="5" Background="White" />
+        <ScrollViewer Margin="1" Background="White">
+            <TextBlock x:Name="LegalBox" FontFamily="Consolas" Margin="5" />
         </ScrollViewer>
         <Border BorderThickness="1" BorderBrush="#117DBB" />
     </Grid>
