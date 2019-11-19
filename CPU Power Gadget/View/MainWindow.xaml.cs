@@ -325,10 +325,18 @@ namespace CpuPowerGadget.View
             CoreUtil.Text = coreUtil.HasValue ? $"{coreUtil.Value:F2}" : "?";
         }
 
+        protected override void OnSourceInitialized(EventArgs e)
+        {
+            base.OnSourceInitialized(e);
+            this.SetPlacement(Settings.Default.WindowPlacement);
+        }
+
         private void OnWindowClosing(object sender, CancelEventArgs e)
         {
             _timer.Stop();
             _computer.Close();
+            Settings.Default.WindowPlacement = this.GetPlacement();
+            Settings.Default.Save();
         }
 
         private void OnAlwaysOnTopClick(object sender, RoutedEventArgs e)

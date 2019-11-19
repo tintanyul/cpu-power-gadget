@@ -91,6 +91,7 @@
     </Compile>
     <Compile Include="Utilities\ResourceProvider.cs" />
     <Compile Include="Utilities\SimpleAverage.cs" />
+    <Compile Include="Utilities\PlacementHelper.cs" />
     <Compile Include="View\AboutWindow.xaml.cs">
       <DependentUpon>AboutWindow.xaml</DependentUpon>
     </Compile>
@@ -116,7 +117,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="App.config" />
+    <EmbeddedResource Include="App.config" />
     <None Include="Resources\app.manifest" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
