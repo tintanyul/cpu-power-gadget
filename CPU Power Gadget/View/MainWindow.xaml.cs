@@ -115,7 +115,7 @@ namespace CpuPowerGadget.View
             AlwaysOnTopMenuItem.IsChecked = Topmost;
 
             var sensors = UpdateSensors();
-            var powerLimit = sensors.FirstOrDefault(s => s.Identifier.ToString().Contains("powerlimit") && s.Name.Contains("PL1"))?.Value;
+            var powerLimit = sensors.FirstOrDefault(s => s.Identifier.ToString().Contains("power") && s.Name.Contains("PL1"))?.Value;
 
             var powerMax = 45;
             if (powerLimit.HasValue)
@@ -271,7 +271,7 @@ namespace CpuPowerGadget.View
             var powers = sensors.Where(s => s.Identifier.ToString().Contains("power")).ToList();
 
             var pkgPower = powers.FirstOrDefault(s => s.Name.Contains("Package"))?.Value;
-            var powerLimit = sensors.FirstOrDefault(s => s.Identifier.ToString().Contains("powerlimit") && s.Name.Contains("PL1"))?.Value;
+            var powerLimit = sensors.FirstOrDefault(s => s.Identifier.ToString().Contains("power") && s.Name.Contains("PL1"))?.Value;
             var corePower = _cpuVendor == Vendor.AMD
                 ? powers.Where(s => s.Name.Contains("Core")).Select(s => s.Value ?? 0.0f).Sum() 
                 : powers.FirstOrDefault(s => s.Name.Contains("Core"))?.Value;
