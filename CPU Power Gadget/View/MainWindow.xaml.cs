@@ -36,6 +36,7 @@ namespace CpuPowerGadget.View
         private readonly SimpleAverage _clockAverage;
 
         private SimpleGraph _pkgPowerGraph;
+        private SimpleGraph _powerLimitGraph;
         private SimpleGraph _corePowerGraph;
         private SimpleGraph _dramPowerGraph;
 
@@ -113,23 +114,39 @@ namespace CpuPowerGadget.View
             Topmost = Settings.Default.AlwaysOnTop;
             AlwaysOnTopMenuItem.IsChecked = Topmost;
 
-            _pkgPowerGraph = new SimpleGraph
+            var sensors = UpdateSensors();
+            var powerLimit = sensors.FirstOrDefault(s => s.Identifier.ToString().Contains("powerlimit") && s.Name.Contains("PL1"))?.Value;
+
+            var powerMax = 45;
+            if (powerLimit.HasValue)
+            {
+                powerMax = (int) (Math.Ceiling((powerLimit.Value * 1.25f + 5) / 10.0f) * 10);
+            }
+
+            _powerLimitGraph = new SimpleGraph
             {
                 Canvas = PowerCanvas,
                 AxisCanvas = PowerAxis,
+                Thin = true,
                 Min = 0,
-                Max = 45 // TODO Max TDP + some
+                Max = powerMax
+            };
+            _pkgPowerGraph = new SimpleGraph
+            {
+                Primary = _powerLimitGraph,
+                Canvas = PowerCanvas
             };
             _corePowerGraph = new SimpleGraph
             {
-                Primary = _pkgPowerGraph,
+                Primary = _powerLimitGraph,
                 Canvas = PowerCanvas
             };
             _dramPowerGraph = new SimpleGraph
             {
-                Primary = _pkgPowerGraph,
+                Primary = _powerLimitGraph,
                 Canvas = PowerCanvas
             };
+            _powerLimitGraph.Init();
             _pkgPowerGraph.Init();
             _corePowerGraph.Init();
             _dramPowerGraph.Init();
@@ -184,6 +201,7 @@ namespace CpuPowerGadget.View
             _coreUtilGraph.Init();
 
             PkgPowerPath.Data = _pkgPowerGraph.Geometry;
+            PowerLimitPath.Data = _powerLimitGraph.Geometry;
             CorePowerPath.Data = _corePowerGraph.Geometry;
             DramPowerPath.Data = _dramPowerGraph.Geometry;
             BaseFreqPath.Data = _baseFreqGraph.Geometry;
@@ -196,13 +214,20 @@ namespace CpuPowerGadget.View
             TimerOnElapsed(this, null);
         }
 
-        private void TimerOnElapsed(object sender, ElapsedEventArgs e)
+        private List<ISensor> UpdateSensors()
         {
             _computer.Accept(_updateVisitor);
 
             var sensors = new List<ISensor>();
             var visitor = new SensorVisitor(s => { if (s.Identifier.ToString().Contains("cpu")) sensors.Add(s); });
             visitor.VisitComputer(_computer);
+
+            return sensors;
+        }
+
+        private void TimerOnElapsed(object sender, ElapsedEventArgs e)
+        {
+            var sensors = UpdateSensors();
 
             if (sensors.Count == 0)
             {
@@ -246,6 +271,7 @@ namespace CpuPowerGadget.View
             var powers = sensors.Where(s => s.Identifier.ToString().Contains("power")).ToList();
 
             var pkgPower = powers.FirstOrDefault(s => s.Name.Contains("Package"))?.Value;
+            var powerLimit = sensors.FirstOrDefault(s => s.Identifier.ToString().Contains("powerlimit") && s.Name.Contains("PL1"))?.Value;
             var corePower = _cpuVendor == Vendor.AMD
                 ? powers.Where(s => s.Name.Contains("Core")).Select(s => s.Value ?? 0.0f).Sum() 
                 : powers.FirstOrDefault(s => s.Name.Contains("Core"))?.Value;
@@ -261,6 +287,7 @@ namespace CpuPowerGadget.View
                 UpdateUi(clockAvg, pkgPower, corePower, dramPower, pkgTemp, coreUtil);
 
                 _pkgPowerGraph.Update(pkgPower);
+                _powerLimitGraph.Update(powerLimit);
                 _corePowerGraph.Update(corePower);
                 _dramPowerGraph.Update(dramPower);
                 _avgFreqGraph.Update(clockAvg / 1000);

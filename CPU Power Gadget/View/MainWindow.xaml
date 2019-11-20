@@ -64,6 +64,7 @@
                 <Grid Margin="25,10,10,10">
                     <Canvas Name="PowerCanvas" Background="Transparent" ClipToBounds="True">
                         <Line Stroke="#7A7A7A" Y2="125" StrokeThickness="1" StrokeDashArray="3 2"></Line>
+                        <Path Name="PowerLimitPath" Stroke="#949598" StrokeThickness="1" Panel.ZIndex="1" />
                         <Path Name="DramPowerPath" Stroke="#FFC314" StrokeThickness="2" Panel.ZIndex="1" StrokeLineJoin="Bevel" />
                         <Path Name="CorePowerPath" Stroke="#00BCF2" StrokeThickness="2" Panel.ZIndex="1" StrokeLineJoin="Bevel" />
                         <Path Name="PkgPowerPath" Stroke="#0086D0" StrokeThickness="2" Panel.ZIndex="1" StrokeLineJoin="Bevel" />
