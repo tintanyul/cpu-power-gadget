@@ -10,7 +10,7 @@ Provides real-time graph of processor *Power* (Watts), *Frequency* (GHz), *Tempe
 
 Whatever CPUs Libre Hardware Monitor supports:
 
-- Intel: up to Cofee Lake
+- Intel: up to Tiger Lake
 - AMD: up to Zen 2
 
 ## System Requirements
