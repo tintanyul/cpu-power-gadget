@@ -83,7 +83,7 @@ namespace CpuPowerGadget.Model
             }
         }
 
-        private bool AutoScale()
+        private bool AutoScale(SimpleGraph other, float? otherVal)
         {
             if (Primary != null)
             {
@@ -100,6 +100,12 @@ namespace CpuPowerGadget.Model
             var changed = false;
 
             var histMax = _history.Where(h => h >= 0).Max();
+            if (other != null)
+            {
+                var otherHistMax = other._history.Where(h => h >= 0).DefaultIfEmpty(0).Max();
+                if (otherHistMax > histMax) histMax = otherHistMax;
+                if (otherVal.HasValue && otherVal.Value > histMax) histMax = otherVal.Value;
+            }
             var histMin = _history.Where(h => h >= 0).Min();
 
             while (histMax > Max)
@@ -249,14 +255,14 @@ namespace CpuPowerGadget.Model
             _figure.Segments.Add(lineSegmentEnd);
         }
 
-        public void Update(float? val)
+        public void Update(float? val, SimpleGraph other = null, float? otherVal = null)
         {
             if (!val.HasValue) return;
 
             _history.RemoveAt(0);
             _history.Add(val.Value);
 
-            if (AutoScale())
+            if (AutoScale(other, otherVal))
             {
                 UpdateAxis();
                 UpdateGridLines();

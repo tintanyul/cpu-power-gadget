@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Timers;
@@ -48,6 +49,8 @@ namespace CpuPowerGadget.View
         private SimpleGraph _pkgTempGraph;
 
         private SimpleGraph _coreUtilGraph;
+
+        private readonly Stopwatch _timerStopwatch = new Stopwatch();
 
         public MainWindow()
         {
@@ -225,14 +228,27 @@ namespace CpuPowerGadget.View
             return sensors;
         }
 
+        private void ScheduleTimer()
+        {
+            var elapsed = _timerStopwatch.ElapsedMilliseconds;
+            while (elapsed >= 100)
+            {
+                elapsed -= 100;
+            }
+
+            _timer.Interval = _samplingResolution - elapsed;
+            _timer.Start();
+        }
+
         private void TimerOnElapsed(object sender, ElapsedEventArgs e)
         {
+            _timerStopwatch.Restart();
+
             var sensors = UpdateSensors();
 
             if (sensors.Count == 0)
             {
-                _timer.Interval = _samplingResolution;
-                _timer.Start();
+                ScheduleTimer();
                 return;
             }
 
@@ -261,8 +277,7 @@ namespace CpuPowerGadget.View
 
             if (DateTime.Now - _lastGraphUpdate < TimeSpan.FromMilliseconds(_screenUpdateResolution))
             {
-                _timer.Interval = _samplingResolution;
-                _timer.Start();
+                ScheduleTimer();
                 return;
             }
 
@@ -286,8 +301,8 @@ namespace CpuPowerGadget.View
             {
                 UpdateUi(clockAvg, pkgPower, corePower, dramPower, pkgTemp, coreUtil);
 
+                _powerLimitGraph.Update(powerLimit, _pkgPowerGraph, pkgPower);
                 _pkgPowerGraph.Update(pkgPower);
-                _powerLimitGraph.Update(powerLimit);
                 _corePowerGraph.Update(corePower);
                 _dramPowerGraph.Update(dramPower);
                 _avgFreqGraph.Update(clockAvg / 1000);
@@ -300,8 +315,8 @@ namespace CpuPowerGadget.View
             _clockMin = float.MaxValue;
             _clockMax = float.MinValue;
             _clockAverage.Reset();
-            _timer.Interval = _samplingResolution;
-            _timer.Start();
+
+            ScheduleTimer();
         }
 
         private void UpdateUi(float clockAvg, float? pkgPower, float? corePower, float? dramPower, float? pkgTemp, float? coreUtil)
