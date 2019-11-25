@@ -22,7 +22,7 @@ namespace CpuPowerGadget
             var assemblyName = new AssemblyName(args.Name);
             var path = $"{assemblyName.Name}.dll";
 
-            if (assemblyName.CultureInfo.Equals(CultureInfo.InvariantCulture) == false)
+            if (assemblyName.CultureInfo?.Equals(CultureInfo.InvariantCulture) == false)
             {
                 path = $@"{assemblyName.CultureInfo}\{path}";
             }
