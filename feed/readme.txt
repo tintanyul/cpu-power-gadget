@@ -1,1 +1,0 @@
-This folder is a local NuGet package source. Place LibreHardwareMonitorLib.0.8.1.nupkg here.

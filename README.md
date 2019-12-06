@@ -18,10 +18,6 @@ Whatever CPUs Libre Hardware Monitor supports:
 - Windows Vista SP2 or later (32-bit and 64-bit)
 - .NET Framework 4.5.2 or later
 
-## Building
-
-CPU Power Gadget can be built using Visual Studio. Until the Libre Hardware Monitor dependency is available as an up-to-date NuGet package, it must be built seperately, and the resulting `LibreHardwareMonitorLib.0.8.1.nupkg` must be placed into the directory named `feed` in the solution root.
-
 ## License
 
 Mozilla Public License Version 2.0
