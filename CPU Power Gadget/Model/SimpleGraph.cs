@@ -67,7 +67,7 @@ namespace CpuPowerGadget.Model
             UpdateAxis();
             UpdateGridLines();
 
-            for (var i = 0; i < _dataPoints; i++)
+            for (var i = 0; i <= _dataPoints; i++)
             {
                 _history.Add(DefaultValue);
             }
@@ -228,7 +228,7 @@ namespace CpuPowerGadget.Model
 
         private void UpdatePath()
         {
-            double t = 0;
+            double t = 1;
             var delta = _width / _dataPoints;
             var first = true;
 
