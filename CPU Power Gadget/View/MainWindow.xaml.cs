@@ -178,7 +178,6 @@ namespace CpuPowerGadget.View
             {
                 Primary = _avgFreqGraph,
                 Canvas = FreqCanvas,
-                Thin = true
             };
             _avgFreqGraph.Init();
             _baseFreqGraph.Init();

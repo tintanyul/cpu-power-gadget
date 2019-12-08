@@ -12,9 +12,8 @@ namespace CpuPowerGadget.Model
     {
         private const int Stepping = 3;
 
-        private static readonly SolidColorBrush GridLineBrush = new SolidColorBrush(Color.FromRgb(200, 200, 200));
-        private static readonly SolidColorBrush GridLineLightBrush = new SolidColorBrush(Color.FromRgb(228, 228, 228));
-        private static readonly DoubleCollection GridLineDashArray = DoubleCollection.Parse("3 2");
+        private static readonly SolidColorBrush GridLineBrush = new SolidColorBrush(Color.FromRgb(187, 218, 234));
+        private static readonly SolidColorBrush GridLineLightBrush = new SolidColorBrush(Color.FromRgb(217, 234, 244));
 
         public PathGeometry Geometry { get; }
 
@@ -214,7 +213,6 @@ namespace CpuPowerGadget.Model
                 {
                     Stroke = secondary ? GridLineLightBrush : GridLineBrush,
                     StrokeThickness = 1,
-                    StrokeDashArray = GridLineDashArray,
                     X2 = _width,
                     Y1 = gridY + 0.5,
                     Y2 = gridY + 0.5,

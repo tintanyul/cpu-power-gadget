@@ -5,7 +5,30 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
         Title="CPU Power Gadget" SizeToContent="WidthAndHeight" Icon="/Resources/cpu.ico" ResizeMode="CanMinimize" Closing="OnWindowClosing" Loaded="OnWindowLoaded">
-    <Grid Margin="0" Background="#F0F0F0">
+    <Window.Resources>
+        <SolidColorBrush x:Key="ColorBackground">#F0F0F0</SolidColorBrush>
+        <SolidColorBrush x:Key="ColorChartTitle">#000000</SolidColorBrush>
+        <SolidColorBrush x:Key="ColorChartSeriesTitle">#707070</SolidColorBrush>
+        <SolidColorBrush x:Key="ColorChartSeriesValue">#000000</SolidColorBrush>
+        <SolidColorBrush x:Key="ColorChartBackground">#FFFFFF</SolidColorBrush>
+        <SolidColorBrush x:Key="ColorChartYAxis">#BBDAEA</SolidColorBrush>
+        <SolidColorBrush x:Key="ColorChartBorder">#117DBB</SolidColorBrush>
+
+        <SolidColorBrush x:Key="ColorDataBase">#A0A0A0</SolidColorBrush>
+
+        <SolidColorBrush x:Key="ColorDataPowerPackage">#4DA60C</SolidColorBrush>
+        <SolidColorBrush x:Key="ColorDataPowerCore">#79D50D</SolidColorBrush>
+        <SolidColorBrush x:Key="ColorDataPowerDram">#9528B4</SolidColorBrush>
+
+        <SolidColorBrush x:Key="ColorDataFreqMax">#117DBB</SolidColorBrush>
+        <SolidColorBrush x:Key="ColorDataFreqAvg">#81B3D2</SolidColorBrush>
+        <SolidColorBrush x:Key="ColorDataFreqMin">#2D117DBB</SolidColorBrush>
+
+        <SolidColorBrush x:Key="ColorDataTempPackage">#DF672C</SolidColorBrush>
+
+        <SolidColorBrush x:Key="ColorDataUtilCore">#117DBB</SolidColorBrush>
+    </Window.Resources>
+    <Grid Margin="0" Background="{StaticResource ColorBackground}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
@@ -25,8 +48,8 @@
         </Grid.ContextMenu>
         <StackPanel x:Name="PowerPanel" Height="190" Grid.Row="0" Grid.Column="0" Margin="10" Orientation="Vertical">
             <DockPanel LastChildFill="False" Margin="0,0,0,5">
-                <TextBlock DockPanel.Dock="Left" Foreground="#1F59C3" FontSize="15">Power</TextBlock>
-                <TextBlock DockPanel.Dock="Right" Foreground="#1F59C3" FontSize="11" VerticalAlignment="Bottom">WATTS</TextBlock>
+                <TextBlock DockPanel.Dock="Left" Foreground="{StaticResource ColorChartTitle}" FontSize="15">Power</TextBlock>
+                <TextBlock DockPanel.Dock="Right" Foreground="{StaticResource ColorChartTitle}" FontSize="11" VerticalAlignment="Bottom">W</TextBlock>
             </DockPanel>
             <StackPanel Orientation="Horizontal" Grid.IsSharedSizeScope="True">
                 <Grid Margin="0,0,10,0" x:Name="PkgPowerGrid">
@@ -34,52 +57,52 @@
                         <ColumnDefinition SharedSizeGroup="PowerGroup" />
                     </Grid.ColumnDefinitions>
                     <DockPanel LastChildFill="False" Margin="0,0,0,3" MinWidth="60">
-                        <TextBlock DockPanel.Dock="Left" FontSize="11" Margin="0,0,8,0" VerticalAlignment="Bottom">PKG</TextBlock>
-                        <TextBlock x:Name="PkgPower" DockPanel.Dock="Right"></TextBlock>
+                        <TextBlock DockPanel.Dock="Left" Foreground="{StaticResource ColorChartSeriesTitle}" FontSize="11" Margin="0,0,8,0" VerticalAlignment="Bottom">Pkg</TextBlock>
+                        <TextBlock x:Name="PkgPower" Foreground="{StaticResource ColorChartSeriesValue}" DockPanel.Dock="Right"></TextBlock>
                     </DockPanel>
-                    <Rectangle VerticalAlignment="Bottom" Fill="#0086D0" Height="3"></Rectangle>
+                    <Rectangle VerticalAlignment="Bottom" Fill="{StaticResource ColorDataPowerPackage}" Height="3"></Rectangle>
                 </Grid>
                 <Grid Margin="0,0,10,0" x:Name="CorePowerGrid">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition SharedSizeGroup="PowerGroup" />
                     </Grid.ColumnDefinitions>
                     <DockPanel LastChildFill="False" Margin="0,0,0,3" MinWidth="60">
-                        <TextBlock DockPanel.Dock="Left" FontSize="11" Margin="0,0,5,0" VerticalAlignment="Bottom">CORE</TextBlock>
-                        <TextBlock x:Name="CorePower" DockPanel.Dock="Right"></TextBlock>
+                        <TextBlock DockPanel.Dock="Left" Foreground="{StaticResource ColorChartSeriesTitle}" FontSize="11" Margin="0,0,5,0" VerticalAlignment="Bottom">Core</TextBlock>
+                        <TextBlock x:Name="CorePower" Foreground="{StaticResource ColorChartSeriesValue}" DockPanel.Dock="Right"></TextBlock>
                     </DockPanel>
-                    <Rectangle VerticalAlignment="Bottom" Fill="#00BCF2" Height="3"></Rectangle>
+                    <Rectangle VerticalAlignment="Bottom" Fill="{StaticResource ColorDataPowerCore}" Height="3"></Rectangle>
                 </Grid>
                 <Grid Margin="0,0,10,0" x:Name="DramPowerGrid">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition SharedSizeGroup="PowerGroup" />
                     </Grid.ColumnDefinitions>
                     <DockPanel LastChildFill="False" Margin="0,0,0,3" MinWidth="60">
-                        <TextBlock DockPanel.Dock="Left" FontSize="11" Margin="0,0,5,0" VerticalAlignment="Bottom">DRAM</TextBlock>
-                        <TextBlock x:Name="DramPower" DockPanel.Dock="Right"></TextBlock>
+                        <TextBlock DockPanel.Dock="Left" Foreground="{StaticResource ColorChartSeriesTitle}" FontSize="11" Margin="0,0,5,0" VerticalAlignment="Bottom">Mem</TextBlock>
+                        <TextBlock x:Name="DramPower" Foreground="{StaticResource ColorChartSeriesValue}" DockPanel.Dock="Right"></TextBlock>
                     </DockPanel>
-                    <Rectangle VerticalAlignment="Bottom" Fill="#FFC314" Height="3"></Rectangle>
+                    <Rectangle VerticalAlignment="Bottom" Fill="{StaticResource ColorDataPowerDram}" Height="3"></Rectangle>
                 </Grid>
             </StackPanel>
-            <Grid Background="White">
+            <Grid Background="{StaticResource ColorChartBackground}">
                 <Grid Margin="25,10,10,10">
                     <Canvas Name="PowerCanvas" Background="Transparent" ClipToBounds="True">
-                        <Line Stroke="#7A7A7A" Y2="125" StrokeThickness="1" StrokeDashArray="3 2"></Line>
-                        <Path Name="PowerLimitPath" Stroke="#949598" StrokeThickness="1" Panel.ZIndex="1" />
-                        <Path Name="DramPowerPath" Stroke="#FFC314" StrokeThickness="2" Panel.ZIndex="1" StrokeLineJoin="Bevel" />
-                        <Path Name="CorePowerPath" Stroke="#00BCF2" StrokeThickness="2" Panel.ZIndex="1" StrokeLineJoin="Bevel" />
-                        <Path Name="PkgPowerPath" Stroke="#0086D0" StrokeThickness="2" Panel.ZIndex="1" StrokeLineJoin="Bevel" />
+                        <Line Stroke="{StaticResource ColorChartYAxis}" X1="0.5" X2="0.5" Y2="125" StrokeThickness="1" />
+                        <Path Name="PowerLimitPath" Stroke="{StaticResource ColorDataBase}" StrokeThickness="1" Panel.ZIndex="1" />
+                        <Path Name="DramPowerPath" Stroke="{StaticResource ColorDataPowerDram}" StrokeThickness="2" Panel.ZIndex="1" StrokeLineJoin="Bevel" />
+                        <Path Name="CorePowerPath" Stroke="{StaticResource ColorDataPowerCore}" StrokeThickness="2" Panel.ZIndex="1" StrokeLineJoin="Bevel" />
+                        <Path Name="PkgPowerPath" Stroke="{StaticResource ColorDataPowerPackage}" StrokeThickness="2" Panel.ZIndex="1" StrokeLineJoin="Bevel" />
                     </Canvas>
                 </Grid>
                 <Canvas x:Name="PowerAxis" Width="25" HorizontalAlignment="Left">
 
                 </Canvas>
-                <Border BorderThickness="1" Width="380" Height="145" BorderBrush="#117DBB"></Border>
+                <Border BorderThickness="1" Width="380" Height="145" BorderBrush="{StaticResource ColorChartBorder}" />
             </Grid>
         </StackPanel>
         <StackPanel Height="190" Grid.Row="1" Grid.Column="0" Margin="10" Orientation="Vertical">
             <DockPanel LastChildFill="False" Margin="0,0,0,5">
-                <TextBlock DockPanel.Dock="Left" Foreground="#1F59C3" FontSize="15">Frequency</TextBlock>
-                <TextBlock DockPanel.Dock="Right" Foreground="#1F59C3" FontSize="12" VerticalAlignment="Bottom">GHZ</TextBlock>
+                <TextBlock DockPanel.Dock="Left" Foreground="{StaticResource ColorChartTitle}" FontSize="15">Frequency</TextBlock>
+                <TextBlock DockPanel.Dock="Right" Foreground="{StaticResource ColorChartTitle}" FontSize="12" VerticalAlignment="Bottom">GHz</TextBlock>
             </DockPanel>
             <StackPanel Orientation="Horizontal" Grid.IsSharedSizeScope="True">
                 <Grid Margin="0,0,10,0">
@@ -87,41 +110,41 @@
                         <ColumnDefinition SharedSizeGroup="PowerGroup" />
                     </Grid.ColumnDefinitions>
                     <DockPanel LastChildFill="False" Margin="0,0,0,3" MinWidth="53">
-                        <TextBlock DockPanel.Dock="Left" FontSize="11" Margin="0,0,5,0" VerticalAlignment="Bottom">MAX</TextBlock>
-                        <TextBlock x:Name="MaxFreq" DockPanel.Dock="Right"></TextBlock>
+                        <TextBlock DockPanel.Dock="Left" Foreground="{StaticResource ColorChartSeriesTitle}" FontSize="11" Margin="0,0,5,0" VerticalAlignment="Bottom">Max</TextBlock>
+                        <TextBlock x:Name="MaxFreq" Foreground="{StaticResource ColorChartSeriesValue}" DockPanel.Dock="Right"></TextBlock>
                     </DockPanel>
-                    <Rectangle VerticalAlignment="Bottom" Fill="#0073CB" Height="3"></Rectangle>
+                    <Rectangle VerticalAlignment="Bottom" Fill="{StaticResource ColorDataFreqMax}" Height="3"></Rectangle>
                 </Grid>
                 <Grid Margin="0,0,10,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition SharedSizeGroup="PowerGroup" />
                     </Grid.ColumnDefinitions>
                     <DockPanel LastChildFill="False" Margin="0,0,0,3" MinWidth="53">
-                        <TextBlock DockPanel.Dock="Left" FontSize="11" Margin="0,0,5,0" VerticalAlignment="Bottom">AVG</TextBlock>
-                        <TextBlock x:Name="AvgFreq" DockPanel.Dock="Right"></TextBlock>
+                        <TextBlock DockPanel.Dock="Left" Foreground="{StaticResource ColorChartSeriesTitle}" FontSize="11" Margin="0,0,5,0" VerticalAlignment="Bottom">Avg</TextBlock>
+                        <TextBlock x:Name="AvgFreq" Foreground="{StaticResource ColorChartSeriesValue}" DockPanel.Dock="Right"></TextBlock>
                     </DockPanel>
-                    <Rectangle VerticalAlignment="Bottom" Fill="#00BCF2" Height="3"></Rectangle>
+                    <Rectangle VerticalAlignment="Bottom" Fill="{StaticResource ColorDataFreqAvg}" Height="3"></Rectangle>
                 </Grid>
                 <Grid Margin="0,0,10,0">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition SharedSizeGroup="PowerGroup" />
                     </Grid.ColumnDefinitions>
                     <DockPanel LastChildFill="False" Margin="0,0,0,3" MinWidth="53">
-                        <TextBlock DockPanel.Dock="Left" FontSize="11" Margin="0,0,5,0" VerticalAlignment="Bottom">MIN</TextBlock>
-                        <TextBlock x:Name="MinFreq" DockPanel.Dock="Right"></TextBlock>
+                        <TextBlock DockPanel.Dock="Left" Foreground="{StaticResource ColorChartSeriesTitle}" FontSize="11" Margin="0,0,5,0" VerticalAlignment="Bottom">Min</TextBlock>
+                        <TextBlock x:Name="MinFreq" Foreground="{StaticResource ColorChartSeriesValue}" DockPanel.Dock="Right"></TextBlock>
                     </DockPanel>
-                    <Rectangle VerticalAlignment="Bottom" Fill="#B2EBFB" Height="3"></Rectangle>
+                    <Rectangle VerticalAlignment="Bottom" Fill="{StaticResource ColorDataFreqMin}" Height="3"></Rectangle>
                 </Grid>
             </StackPanel>
-            <Grid Background="White">
+            <Grid Background="{StaticResource ColorChartBackground}">
                 <Grid Margin="25,10,10,10">
                     <Canvas Name="FreqCanvas" Background="Transparent" ClipToBounds="True">
-                        <Line Stroke="#7A7A7A" Y2="125" StrokeThickness="1" StrokeDashArray="3 2" />
-                        <Path Name="BaseFreqPath" Stroke="#949598" StrokeThickness="1" Panel.ZIndex="1" />
+                        <Line Stroke="{StaticResource ColorChartYAxis}" X1="0.5" X2="0.5" Y2="125" StrokeThickness="1" />
+                        <Path Name="BaseFreqPath" Stroke="{StaticResource ColorDataBase}" StrokeThickness="1" Panel.ZIndex="1" />
                         <Path Name="MinFreqPath" Stroke="Transparent" StrokeThickness="1" Panel.ZIndex="1" />
-                        <Path Name="AvgFreqPath" Stroke="#00BCF2" StrokeThickness="2" Panel.ZIndex="1" StrokeLineJoin="Bevel" />
-                        <Path Name="MaxFreqPath" Stroke="#0073CB" StrokeThickness="1" Panel.ZIndex="2" StrokeLineJoin="Bevel"/>
-                        <Path Stroke="Transparent" Fill="#4D00BCF2" Panel.ZIndex="1" StrokeLineJoin="Bevel">
+                        <Path Name="AvgFreqPath" Stroke="{StaticResource ColorDataFreqAvg}" StrokeThickness="2" Panel.ZIndex="1" StrokeLineJoin="Bevel" />
+                        <Path Name="MaxFreqPath" Stroke="{StaticResource ColorDataFreqMax}" StrokeThickness="2" Panel.ZIndex="2" StrokeLineJoin="Bevel"/>
+                        <Path Stroke="Transparent" Fill="{StaticResource ColorDataFreqMin}" Panel.ZIndex="1" StrokeLineJoin="Bevel">
                             <Path.Data>
                                 <CombinedGeometry GeometryCombineMode="Exclude"
                                                   Geometry1="{Binding ElementName=MaxFreqPath, Path=Data}"
@@ -133,14 +156,14 @@
                 <Canvas x:Name="FreqAxis" Width="25" HorizontalAlignment="Left">
 
                 </Canvas>
-                <Border BorderThickness="1" Width="380" Height="145" BorderBrush="#117DBB" />
+                <Border BorderThickness="1" Width="380" Height="145" BorderBrush="{StaticResource ColorChartBorder}" />
             </Grid>
         </StackPanel>
         <Separator Grid.Row="1" Grid.Column="0" VerticalAlignment="Top" Margin="0" />
         <StackPanel Height="140" Grid.Row="2" Grid.Column="0" Margin="10" Orientation="Vertical">
             <DockPanel LastChildFill="False" Margin="0,0,0,5">
-                <TextBlock DockPanel.Dock="Left" Foreground="#1F59C3" FontSize="15">Temperature</TextBlock>
-                <TextBlock DockPanel.Dock="Right" Foreground="#1F59C3" FontSize="12" VerticalAlignment="Bottom">°C</TextBlock>
+                <TextBlock DockPanel.Dock="Left" Foreground="{StaticResource ColorChartTitle}" FontSize="15">Temperature</TextBlock>
+                <TextBlock DockPanel.Dock="Right" Foreground="{StaticResource ColorChartTitle}" FontSize="12" VerticalAlignment="Bottom">°C</TextBlock>
             </DockPanel>
             <StackPanel Orientation="Horizontal" Grid.IsSharedSizeScope="True">
                 <Grid Margin="0,0,10,0">
@@ -148,30 +171,30 @@
                         <ColumnDefinition SharedSizeGroup="PowerGroup" />
                     </Grid.ColumnDefinitions>
                     <DockPanel LastChildFill="False" Margin="0,0,0,3" MinWidth="60">
-                        <TextBlock DockPanel.Dock="Left" FontSize="11" Margin="0,0,5,0" VerticalAlignment="Bottom">PKG</TextBlock>
-                        <TextBlock x:Name="PkgTemp" DockPanel.Dock="Right"></TextBlock>
+                        <TextBlock DockPanel.Dock="Left" Foreground="{StaticResource ColorChartSeriesTitle}" FontSize="11" Margin="0,0,5,0" VerticalAlignment="Bottom">Pkg</TextBlock>
+                        <TextBlock x:Name="PkgTemp" Foreground="{StaticResource ColorChartSeriesValue}" DockPanel.Dock="Right"></TextBlock>
                     </DockPanel>
-                    <Rectangle VerticalAlignment="Bottom" Fill="#0086D0" Height="3"></Rectangle>
+                    <Rectangle VerticalAlignment="Bottom" Fill="{StaticResource ColorDataTempPackage}" Height="3" />
                 </Grid>
             </StackPanel>
-            <Grid Background="White">
+            <Grid Background="{StaticResource ColorChartBackground}">
                 <Grid Margin="25,10,10,10">
                     <Canvas Name="TempCanvas" Background="Transparent" ClipToBounds="True">
-                        <Line Stroke="#7A7A7A" Y2="75" StrokeThickness="1" StrokeDashArray="3 2" />
-                        <Path Name="PkgTempPath" Stroke="#0086D0" StrokeThickness="2" Panel.ZIndex="1" StrokeLineJoin="Bevel" />
+                        <Line Stroke="{StaticResource ColorChartYAxis}" X1="0.5" X2="0.5" Y2="75" StrokeThickness="1" />
+                        <Path Name="PkgTempPath" Stroke="{StaticResource ColorDataTempPackage}" StrokeThickness="2" Panel.ZIndex="1" StrokeLineJoin="Bevel" />
                     </Canvas>
                 </Grid>
                 <Canvas x:Name="TempAxis" Width="25" HorizontalAlignment="Left">
 
                 </Canvas>
-                <Border BorderThickness="1" Width="380" Height="95" BorderBrush="#117DBB" />
+                <Border BorderThickness="1" Width="380" Height="95" BorderBrush="{StaticResource ColorChartBorder}" />
             </Grid>
         </StackPanel>
         <Separator Grid.Row="2" Grid.Column="0" VerticalAlignment="Top" Margin="0" />
         <StackPanel Height="140" Grid.Row="3" Grid.Column="0" Margin="10" Orientation="Vertical">
             <DockPanel LastChildFill="False" Margin="0,0,0,5">
-                <TextBlock DockPanel.Dock="Left" Foreground="#1F59C3" FontSize="15">Utilization</TextBlock>
-                <TextBlock DockPanel.Dock="Right" Foreground="#1F59C3" FontSize="12" VerticalAlignment="Bottom">%</TextBlock>
+                <TextBlock DockPanel.Dock="Left" Foreground="{StaticResource ColorChartTitle}" FontSize="15">Utilization</TextBlock>
+                <TextBlock DockPanel.Dock="Right" Foreground="{StaticResource ColorChartTitle}" FontSize="12" VerticalAlignment="Bottom">%</TextBlock>
             </DockPanel>
             <StackPanel Orientation="Horizontal" Grid.IsSharedSizeScope="True">
                 <Grid Margin="0,0,10,0">
@@ -179,23 +202,23 @@
                         <ColumnDefinition SharedSizeGroup="PowerGroup" />
                     </Grid.ColumnDefinitions>
                     <DockPanel LastChildFill="False" Margin="0,0,0,3" MinWidth="67">
-                        <TextBlock DockPanel.Dock="Left" FontSize="11" Margin="0,0,5,0" VerticalAlignment="Bottom">CORE</TextBlock>
-                        <TextBlock x:Name="CoreUtil" DockPanel.Dock="Right"></TextBlock>
+                        <TextBlock DockPanel.Dock="Left" Foreground="{StaticResource ColorChartSeriesTitle}" FontSize="11" Margin="0,0,5,0" VerticalAlignment="Bottom">Core</TextBlock>
+                        <TextBlock x:Name="CoreUtil" Foreground="{StaticResource ColorChartSeriesValue}" DockPanel.Dock="Right"></TextBlock>
                     </DockPanel>
-                    <Rectangle VerticalAlignment="Bottom" Fill="#00BCF2" Height="3"></Rectangle>
+                    <Rectangle VerticalAlignment="Bottom" Fill="{StaticResource ColorDataUtilCore}" Height="3" />
                 </Grid>
             </StackPanel>
-            <Grid Background="White">
+            <Grid Background="{StaticResource ColorChartBackground}">
                 <Grid Margin="25,10,10,10">
                     <Canvas Name="UtilCanvas" Background="Transparent" ClipToBounds="True">
-                        <Line Stroke="#7A7A7A" Y2="75" StrokeThickness="1" StrokeDashArray="3 2" />
-                        <Path Name="CoreUtilPath" Stroke="#00BCF2" StrokeThickness="2" Panel.ZIndex="1" StrokeLineJoin="Bevel" />
+                        <Line Stroke="{StaticResource ColorChartYAxis}" X1="0.5" X2="0.5" Y2="75" StrokeThickness="1" />
+                        <Path Name="CoreUtilPath" Stroke="{StaticResource ColorDataUtilCore}" StrokeThickness="2" Panel.ZIndex="1" StrokeLineJoin="Bevel" />
                     </Canvas>
                 </Grid>
                 <Canvas x:Name="UtilAxis" Width="25" HorizontalAlignment="Left">
 
                 </Canvas>
-                <Border BorderThickness="1" Width="380" Height="95" BorderBrush="#117DBB" />
+                <Border BorderThickness="1" Width="380" Height="95" BorderBrush="{StaticResource ColorChartBorder}" />
             </Grid>
         </StackPanel>
         <Separator Grid.Row="3" Grid.Column="0" VerticalAlignment="Top" Margin="0" />
