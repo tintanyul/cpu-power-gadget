@@ -4,7 +4,6 @@ Derived from icon made by Smashicons from www.flaticon.com
 ________________________________________________________________________
 
                         Libre Hardware Monitor:
-     https://github.com/LibreHardwareMonitor/LibreHardwareMonitor
 
 Mozilla Public License Version 2.0
 ==================================
@@ -382,7 +381,6 @@ Exhibit B - "Incompatible With Secondary Licenses" Notice
 ________________________________________________________________________
 
                                WinRing0:
-                   https://github.com/QCute/WinRing0
 
 Copyright (c) 2007-2009 OpenLibSys.org. All rights reserved.
 
