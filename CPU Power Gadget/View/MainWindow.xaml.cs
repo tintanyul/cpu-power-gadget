@@ -320,15 +320,15 @@ namespace CpuPowerGadget.View
 
         private void UpdateUi(float clockAvg, float? pkgPower, float? corePower, float? dramPower, float? pkgTemp, float? coreUtil)
         {
-            MinFreq.Text = $"{_clockMin / 1000:F2}";
-            MaxFreq.Text = $"{_clockMax / 1000:F2}";
-            AvgFreq.Text = $"{clockAvg / 1000:F2}";
+            MinFreq.Text = $"{_clockMin / 1000:F2} GHz";
+            MaxFreq.Text = $"{_clockMax / 1000:F2} GHz";
+            AvgFreq.Text = $"{clockAvg / 1000:F2} GHz";
 
             var powerElements = 0;
 
             if (pkgPower.HasValue)
             {
-                PkgPower.Text = $"{pkgPower.Value:F2}";
+                PkgPower.Text = $"{pkgPower.Value:F2} W";
                 PkgPowerGrid.Visibility = Visibility.Visible;
                 powerElements++;
             }
@@ -339,7 +339,7 @@ namespace CpuPowerGadget.View
 
             if (corePower.HasValue)
             {
-                CorePower.Text = $"{corePower.Value:F2}";
+                CorePower.Text = $"{corePower.Value:F2} W";
                 CorePowerGrid.Visibility = Visibility.Visible;
                 powerElements++;
             }
@@ -350,7 +350,7 @@ namespace CpuPowerGadget.View
 
             if (dramPower.HasValue)
             {
-                DramPower.Text = $"{dramPower.Value:F2}";
+                DramPower.Text = $"{dramPower.Value:F2} W";
                 DramPowerGrid.Visibility = Visibility.Visible;
                 powerElements++;
             }
@@ -361,9 +361,9 @@ namespace CpuPowerGadget.View
 
             PowerPanel.Visibility = powerElements == 0 ? Visibility.Collapsed : Visibility.Visible;
 
-            PkgTemp.Text = pkgTemp.HasValue ? $"{pkgTemp.Value:F2}" : "?";
+            PkgTemp.Text = pkgTemp.HasValue ? $"{pkgTemp.Value:F2} °C" : "?";
 
-            CoreUtil.Text = coreUtil.HasValue ? $"{coreUtil.Value:F2}" : "?";
+            CoreUtil.Text = coreUtil.HasValue ? $"{coreUtil.Value:F2} %" : "?";
         }
 
         protected override void OnSourceInitialized(EventArgs e)
