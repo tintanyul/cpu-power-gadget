@@ -280,6 +280,13 @@ namespace CpuPowerGadget.View
                 return;
             }
 
+            if (_lastGraphUpdate > DateTime.MinValue && DateTime.Now - _lastGraphUpdate > TimeSpan.FromSeconds(5))
+            {
+                _lastGraphUpdate = DateTime.MinValue;
+                ScheduleTimer();
+                return;
+            }
+
             _lastGraphUpdate = DateTime.Now;
 
             var powers = sensors.Where(s => s.Identifier.ToString().Contains("power")).ToList();
