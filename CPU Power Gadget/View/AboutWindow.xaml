@@ -4,11 +4,12 @@
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d"
-        Title="About" Width="200" Height="180" ShowInTaskbar="False" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" Icon="/Resources/cpu.ico" Background="#F0F0F0">
+        Title="About" Width="200" Height="180" ShowInTaskbar="False" ResizeMode="NoResize" WindowStartupLocation="CenterOwner" Icon="/Resources/cpu.ico" Background="#F0F0F0"
+        DataContext="{Binding RelativeSource={RelativeSource Self}}">
     <StackPanel Margin="5">
         <Image Source="/Resources/cpu.ico" Width="32" Margin="10" />
         <Label Content="CPU Power Gadget" HorizontalAlignment="Center" FontSize="16" Padding="0" />
-        <Label Content="Version 0.1.0" HorizontalAlignment="Center" Padding="0" />
+        <TextBlock HorizontalAlignment="Center">Version <Run Text="{Binding Version, Mode=OneWay}"/></TextBlock>
         <Button Content="_Legal" Width="70" Margin="10" Click="OnLegalClick"/>
     </StackPanel>
 </Window>
