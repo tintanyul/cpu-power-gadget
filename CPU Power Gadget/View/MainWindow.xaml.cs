@@ -35,6 +35,8 @@ namespace CpuPowerGadget.View
         private float _clockMin;
         private float _clockMax;
         private readonly SimpleAverage _clockAverage;
+        private readonly SimpleAverage _utilAverage;
+        private readonly SimpleAverage _tempAverage;
 
         private SimpleGraph _pkgPowerGraph;
         private SimpleGraph _powerLimitGraph;
@@ -110,6 +112,8 @@ namespace CpuPowerGadget.View
             _clockMin = float.MaxValue;
             _clockMax = float.MinValue;
             _clockAverage = new SimpleAverage(128);
+            _utilAverage = new SimpleAverage(128);
+            _tempAverage = new SimpleAverage(128);
         }
 
         private void OnWindowLoaded(object sender, RoutedEventArgs e)
@@ -188,7 +192,7 @@ namespace CpuPowerGadget.View
             {
                 Canvas = TempCanvas,
                 AxisCanvas = TempAxis,
-                Min = 40,
+                Min = 30,
                 Max = 100
             };
             _pkgTempGraph.Init();
@@ -273,6 +277,20 @@ namespace CpuPowerGadget.View
                 }
                 clockAvg = _clockAverage.Add(value.Value);
             }
+            var coreUtil = sensors.FirstOrDefault(s => s.Identifier.ToString().Contains("load") && s.Name.Contains("Total"))?.Value;
+            float? utilAverage = null;
+            if (coreUtil != null)
+            {
+                utilAverage = _utilAverage.Add(coreUtil.Value);
+            }
+            var pkgTemp = _cpuVendor == Vendor.AMD 
+                ? sensors.FirstOrDefault(s => s.Identifier.ToString().Contains("temperature") && (s.Name.Contains("Core #1 - ") || s.Name.Contains("Tdie")))?.Value
+                : sensors.FirstOrDefault(s => s.Identifier.ToString().Contains("temperature") && s.Name.Contains("Package"))?.Value;
+            float? tempAverage = null;
+            if (pkgTemp != null)
+            {
+                tempAverage = _tempAverage.Add(pkgTemp.Value);
+            }
 
             if (DateTime.Now - _lastGraphUpdate < TimeSpan.FromMilliseconds(_screenUpdateResolution))
             {
@@ -298,14 +316,9 @@ namespace CpuPowerGadget.View
                 : powers.FirstOrDefault(s => s.Name.Contains("Core"))?.Value;
             var dramPower = powers.FirstOrDefault(s => s.Name.Contains("Memory"))?.Value;
 
-            var pkgTemp = _cpuVendor == Vendor.AMD 
-                ? sensors.FirstOrDefault(s => s.Identifier.ToString().Contains("temperature") && (s.Name.Contains("Core #1 - ") || s.Name.Contains("Tdie")))?.Value
-                : sensors.FirstOrDefault(s => s.Identifier.ToString().Contains("temperature") && s.Name.Contains("Package"))?.Value;
-            var coreUtil = sensors.FirstOrDefault(s => s.Identifier.ToString().Contains("load") && s.Name.Contains("Total"))?.Value;
-
             Dispatcher?.Invoke(() =>
             {
-                UpdateUi(clockAvg, pkgPower, corePower, dramPower, pkgTemp, coreUtil);
+                UpdateUi(clockAvg, pkgPower, corePower, dramPower, tempAverage, utilAverage);
 
                 _powerLimitGraph.Update(powerLimit, _pkgPowerGraph, pkgPower);
                 _pkgPowerGraph.Update(pkgPower);
@@ -314,13 +327,15 @@ namespace CpuPowerGadget.View
                 _avgFreqGraph.Update(clockAvg / 1000);
                 _minFreqGraph.Update(_clockMin / 1000);
                 _maxFreqGraph.Update(_clockMax / 1000);
-                _pkgTempGraph.Update(pkgTemp);
-                _coreUtilGraph.Update(coreUtil);
+                _pkgTempGraph.Update(tempAverage);
+                _coreUtilGraph.Update(utilAverage);
             });
 
             _clockMin = float.MaxValue;
             _clockMax = float.MinValue;
             _clockAverage.Reset();
+            _utilAverage.Reset();
+            _tempAverage.Reset();
 
             ScheduleTimer();
         }
