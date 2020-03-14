@@ -234,9 +234,9 @@ namespace CpuPowerGadget.View
         private void ScheduleTimer()
         {
             var elapsed = _timerStopwatch.ElapsedMilliseconds;
-            while (elapsed >= 100)
+            while (elapsed >= _samplingResolution)
             {
-                elapsed -= 100;
+                elapsed -= (long)_samplingResolution;
             }
 
             _timer.Interval = _samplingResolution - elapsed;
