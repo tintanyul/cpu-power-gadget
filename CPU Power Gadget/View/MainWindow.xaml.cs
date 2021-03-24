@@ -7,6 +7,7 @@ using System.Text;
 using System.Timers;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Shell;
 using CpuPowerGadget.Model;
 using CpuPowerGadget.Properties;
 using CpuPowerGadget.Utilities;
@@ -31,6 +32,8 @@ namespace CpuPowerGadget.View
 
         private double _screenUpdateResolution;
         private double _samplingResolution;
+
+        private bool _taskbarProgress;
 
         private float _clockMin;
         private float _clockMax;
@@ -60,6 +63,8 @@ namespace CpuPowerGadget.View
 
             _screenUpdateResolution = Settings.Default.ScreenUpdateResolution;
             _samplingResolution = Settings.Default.SamplingResolution;
+
+            _taskbarProgress = Settings.Default.TaskbarProgress;
 
             _computer = new Computer();
             _computer.Open();
@@ -99,7 +104,8 @@ namespace CpuPowerGadget.View
             Title += $" - {name.Trim()}";
 
             // 0x16: Processor Frequency Information Leaf - EBX: Maximum Frequency (in MHz)
-            if (cpuId.Data.GetLength(0) >= 0x16)
+            // Only available if Hypervisor bit is not set
+            if (cpuId.Data.GetLength(0) >= 0x16 && ((cpuId.Data[0x1,2] >> 31) & 1) == 0)
             {
                 var freqData = cpuId.Data[0x16,1];
                 _turboClock = (float) Math.Ceiling((freqData + 100) / 1000.0);
@@ -120,6 +126,9 @@ namespace CpuPowerGadget.View
         {
             Topmost = Settings.Default.AlwaysOnTop;
             AlwaysOnTopMenuItem.IsChecked = Topmost;
+
+            _taskbarProgress = Settings.Default.TaskbarProgress;
+            TaskbarProgressMenuItem.IsChecked = _taskbarProgress;
 
             var sensors = UpdateSensors();
             var powerLimit = sensors.FirstOrDefault(s => s.Identifier.ToString().Contains("power") && s.Name.Contains("PL1"))?.Value;
@@ -283,6 +292,20 @@ namespace CpuPowerGadget.View
             {
                 utilAverage = _utilAverage.Add(coreUtil.Value);
             }
+
+            if (_taskbarProgress)
+            {
+                SetTaskBarStatus((utilAverage ?? 0) / 100.0f);
+            }
+
+            foreach (var sensor in sensors)
+            {
+                if (sensor.Identifier.ToString().Contains("temperature"))
+                {
+                    Debug.WriteLine(sensor.Name.ToString() + ": " + sensor.Value);
+                }
+            }
+
             var pkgTemp = _cpuVendor == Vendor.AMD 
                 ? sensors.FirstOrDefault(s => s.Identifier.ToString().Contains("temperature") && (s.Name.Contains("Core #1 - ") || s.Name.Contains("Tdie")))?.Value
                 : sensors.FirstOrDefault(s => s.Identifier.ToString().Contains("temperature") && s.Name.Contains("Package"))?.Value;
@@ -338,6 +361,33 @@ namespace CpuPowerGadget.View
             _tempAverage.Reset();
 
             ScheduleTimer();
+        }
+
+        public void SetTaskBarStatus(float value)
+        {
+            if (value < 0.05) 
+            {
+                // Even at 1% the progress bar is around 8% thick on the taskbar
+                // So only show anything if the CPU usage is at or above 5%
+                value = 0;
+            }
+            else if (value > 1)
+            {
+                value = 1;
+            }
+
+            var state = TaskbarItemProgressState.Normal;
+
+            if (value > 0.8)
+            {
+                state = value < 0.9 ? TaskbarItemProgressState.Paused : TaskbarItemProgressState.Error;
+            }
+
+            Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+            {
+                TaskbarItemInfo.ProgressState = state;
+                TaskbarItemInfo.ProgressValue = value;
+            }));
         }
 
         private void UpdateUi(float clockAvg, float? pkgPower, float? corePower, float? dramPower, float? pkgTemp, float? coreUtil)
@@ -407,6 +457,20 @@ namespace CpuPowerGadget.View
             var menuItem = (MenuItem) sender;
             Topmost = menuItem.IsChecked;
             Settings.Default.AlwaysOnTop = menuItem.IsChecked;
+            Settings.Default.Save();
+        }
+
+        private void OnTaskbarProgressClick(object sender, RoutedEventArgs e)
+        {
+            var menuItem = (MenuItem) sender;
+            _taskbarProgress = menuItem.IsChecked;
+
+            if (!_taskbarProgress)
+            {
+                SetTaskBarStatus(0);
+            }
+
+            Settings.Default.TaskbarProgress = menuItem.IsChecked;
             Settings.Default.Save();
         }
 

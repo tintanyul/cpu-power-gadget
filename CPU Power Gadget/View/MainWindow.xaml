@@ -28,6 +28,9 @@
 
         <SolidColorBrush x:Key="ColorDataUtilCore">#117DBB</SolidColorBrush>
     </Window.Resources>
+    <Window.TaskbarItemInfo>
+        <TaskbarItemInfo />
+    </Window.TaskbarItemInfo>
     <Grid Margin="0" Background="{StaticResource ColorBackground}">
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto" />
@@ -42,6 +45,7 @@
             <ContextMenu>
                 <MenuItem Header="Preferences..." Click="OnPreferencesClick" />
                 <MenuItem x:Name="AlwaysOnTopMenuItem" Header="Always On Top" IsCheckable="True" Click="OnAlwaysOnTopClick" />
+                <MenuItem x:Name="TaskbarProgressMenuItem" Header="Show CPU Usage in Taskbar" IsCheckable="True" Click="OnTaskbarProgressClick"></MenuItem>
                 <Separator />
                 <MenuItem Header="About CPU Power Gadget" Click="OnAboutClick"/>
             </ContextMenu>
